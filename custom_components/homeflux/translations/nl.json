@@ -1,0 +1,21 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "HomeFlux",
+        "description": "Stuur net- en PV-vermogen naar je endpoint.",
+        "data": {
+          "token": "Bearer token (zonder 'Bearer ')",
+          "grid_entity": "Netvermogen sensor (W)",
+          "pv_entity": "PV-vermogen sensor (W)",
+          "interval": "Interval (seconden)"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Ongeldig token",
+      "cannot_connect": "Kan geen verbinding maken met endpoint",
+      "unknown": "Onbekende fout"
+    }
+  }
+}
