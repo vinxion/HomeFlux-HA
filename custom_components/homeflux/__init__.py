@@ -27,13 +27,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     client = HomeFluxClient(hass, endpoint, token, grid_entity, pv_entity)
 
-    # Plan periodieke posts
+    # ✅ Async interval-callback (NIET hass.async_create_task in een thread)
+    async def _interval_callback(now):
+        await client.send_once()
+
     unsub = async_track_time_interval(
         hass,
-        lambda now: hass.async_create_task(client.send_once()),
+        _interval_callback,                 # <-- coroutine function
         timedelta(seconds=interval),
     )
-    # 1x direct versturen bij toevoegen
+
+    # 1x direct versturen bij toevoegen (dit zit wél op de event loop, dus oké)
     hass.async_create_task(client.send_once())
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = unsub
