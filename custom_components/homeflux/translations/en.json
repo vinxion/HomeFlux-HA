@@ -8,7 +8,10 @@
           "token": "Bearer token (without 'Bearer ')",
           "grid_entity": "Grid power sensor (W)",
           "pv_entity": "PV power sensor (W)",
-          "interval": "Interval (seconds)"
+          "interval": "Interval (seconds)",
+          "grid_import_total_entity": "Import meter (kWh, total_increasing)",
+          "grid_export_total_entity": "Export meter (kWh, total_increasing)",
+          "pv_total_entity": "PV total (kWh, total_increasing)"
         }
       }
     },
