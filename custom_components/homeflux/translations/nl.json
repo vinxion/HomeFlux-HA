@@ -9,7 +9,7 @@
           "grid_entity": "Netvermogen sensor (W)",
           "pv_entity": "PV-vermogen sensor (W)",
           "interval": "Interval (seconden)",
-           "grid_import_total_entity": "Import meterstand (kWh, total_increasing)",
+          "grid_import_total_entity": "Import meterstand (kWh, total_increasing)",
           "grid_export_total_entity": "Export meterstand (kWh, total_increasing)",
           "pv_total_entity": "PV totaalopwek (kWh, total_increasing)"
         }
