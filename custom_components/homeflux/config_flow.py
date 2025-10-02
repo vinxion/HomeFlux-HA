@@ -9,8 +9,18 @@ from homeassistant.util import dt as dt_util
 from aiohttp import ClientError
 
 from .const import (
-    DOMAIN, CONF_ENDPOINT, CONF_TOKEN, CONF_GRID_ENTITY, CONF_PV_ENTITY,
-    CONF_INTERVAL, DEFAULT_ENDPOINT, DEFAULT_INTERVAL
+    DOMAIN,
+    CONF_ENDPOINT,
+    CONF_TOKEN,
+    CONF_GRID_ENTITY,
+    CONF_PV_ENTITY,
+    CONF_INTERVAL,
+    DEFAULT_ENDPOINT,
+    DEFAULT_INTERVAL,
+    # ✅ nieuw: optionele cumulatieve energie-entiteiten (kWh, total_increasing)
+    CONF_GRID_IMPORT_TOTAL_ENTITY,
+    CONF_GRID_EXPORT_TOTAL_ENTITY,
+    CONF_PV_TOTAL_ENTITY,
 )
 
 # Interne excepties voor nette foutafhandeling
@@ -39,14 +49,30 @@ class HomeFluxConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 errors["base"] = "unknown"
 
             if not errors:
+                # Endpoint staat vast op DEFAULT_ENDPOINT (zoals in je huidige flow)
                 data = {**user_input, CONF_ENDPOINT: DEFAULT_ENDPOINT}
                 return self.async_create_entry(title="HomeFlux", data=data)
 
         schema = vol.Schema({
             vol.Required(CONF_TOKEN): str,
-            vol.Required(CONF_GRID_ENTITY): selector.selector({"entity": {"domain": "sensor"}}),
-            vol.Required(CONF_PV_ENTITY): selector.selector({"entity": {"domain": "sensor"}}),
+            vol.Required(CONF_GRID_ENTITY): selector.selector({
+                "entity": {"domain": "sensor"}
+            }),
+            vol.Required(CONF_PV_ENTITY): selector.selector({
+                "entity": {"domain": "sensor"}
+            }),
             vol.Required(CONF_INTERVAL, default=DEFAULT_INTERVAL): int,
+
+            # ✅ Nieuw: optioneel, kies cumulatieve energiesensoren (kWh, total_increasing)
+            vol.Optional(CONF_GRID_IMPORT_TOTAL_ENTITY): selector.selector({
+                "entity": {"domain": "sensor", "device_class": "energy"}
+            }),
+            vol.Optional(CONF_GRID_EXPORT_TOTAL_ENTITY): selector.selector({
+                "entity": {"domain": "sensor", "device_class": "energy"}
+            }),
+            vol.Optional(CONF_PV_TOTAL_ENTITY): selector.selector({
+                "entity": {"domain": "sensor", "device_class": "energy"}
+            }),
         })
         return self.async_show_form(step_id="user", data_schema=schema, errors=errors)
 
@@ -61,6 +87,10 @@ class HomeFluxConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         payload = {
             "grid_w": 0,
             "pv_w": 0,
+            # ✅ nieuw: Wh totalen meezenden (0 is OK voor test)
+            "grid_import_wh_total": 0,
+            "grid_export_wh_total": 0,
+            "pv_wh_total": 0,
             "ts": dt_util.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
         }
 
