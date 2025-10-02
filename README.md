@@ -1,6 +1,6 @@
 # HomeFlux
 
-Push je Home Assistant vermogenssensoren (grid & PV) elke *n* seconden naar je HomeFlux.
+Push je Home Assistant vermogenssensoren (grid & PV) en totale meterstanden elke *n* seconden naar je HomeFlux.
 
 - Auth: **Bearer token**
 - Interval: instelbaar (standaard 60s)
@@ -24,4 +24,7 @@ Vul in:
 - **Token** (zonder `Bearer `)
 - **Grid sensor** (W)
 - **PV sensor** (W)
+- **Meterstand import** (kWh)
+- **Meterstand export** (kWh)
+- **PV Totaal** (kWh)
 - **Interval** (seconden)
